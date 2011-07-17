@@ -171,20 +171,77 @@ a:hover { color: #036; }
  * Author: Jonathan Kim
  */
 
+h1 {
+	font-size: 30px;
+}
 
+#board.disable .square {
+	cursor: default !important;
+}
 
+.square {
+	width: 150px;
+	height: 150px;
+	float: left;
+}
 
+.square.active {
+	cursor: pointer;
+}
 
+.square#pos_1x1 {
+	border-right: 1px solid #BEBEBE;
+	border-bottom: 1px solid #BEBEBE;
+}
 
+.square#pos_2x1 {
+	border-bottom: 1px solid #BEBEBE;
+}
 
+.square#pos_3x1 {
+	border-left: 1px solid #BEBEBE;
+	border-bottom: 1px solid #BEBEBE;
+}
 
+.square#pos_1x2 {
+	border-right: 1px solid #BEBEBE;
+	border-bottom: 1px solid #BEBEBE;
+}
 
+.square#pos_2x2 {
+	border-bottom: 1px solid #BEBEBE;
+}
 
+.square#pos_3x2 {
+	border-left: 1px solid #BEBEBE;
+	border-bottom: 1px solid #BEBEBE;
+}
 
+.square#pos_1x3 {
+	border-right: 1px solid #BEBEBE;
+}
 
+.square#pos_2x3 {
+	
+}
 
+.square#pos_3x3 {
+	border-left: 1px solid #BEBEBE;
+}
 
+span.cross {
+	font-size: 180px;
+	font-weight: bold;
+	line-height: 154px;
+	margin-left: 13px;
+}
 
+span.nought {
+	font-size: 240px;
+	font-weight: bold;
+	line-height: 120px;
+	margin-left: 5px;
+}
 
 /**
  * Non-semantic helper classes: please define your styles before this section.
