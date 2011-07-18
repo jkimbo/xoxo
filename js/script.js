@@ -48,12 +48,27 @@ var view = new GameView({
 */
 
 // socket.io specific code
-//var socket = io.connect('http://localhost:8000'); 
-//var socket = new io.connect('http://localhost', {port: 8080}); 
 var socket = new io.connect(null, {port: 8080});
+
+socket.on('connect', function() {
+	$('#announcements').text('Connected!');
+});
 
 socket.on('message', function(data) {
 	console.log(data);
+});
+
+// annoncements
+socket.on('announcement', function(msg) {
+	console.log(msg);
+	$('#announcements').text(msg);
+});
+
+socket.on('users', function(users) {
+	$('#user_list').empty();
+	for (var i in users) {
+		$('#user_list').append($('<li>').text(users[i]));
+	}
 });
 
 $(document).ready(function(){
@@ -72,7 +87,18 @@ $(document).ready(function(){
 		return false;
 	});
 
-});
+	$('#set-nickname').submit(function() {
+		socket.emit('user', $('#name_input').val(), function(set) {
+			if(!set) {
+				console.log('Nickname set');
+				$('#nickname').hide();
+			} else {
+				console.log('Nickname not set');
+			}
+		});
+		return false;
+	});
+})
 
 
 
