@@ -28,6 +28,10 @@ io.sockets.on('connection', function(socket) {
 		}
 	});
 
+	socket.on('message', function (msg) {
+		socket.broadcast.emit('message', socket.user, msg);
+	});
+
 	socket.on('disconnect', function () {
 		if(!socket.user) return;
 

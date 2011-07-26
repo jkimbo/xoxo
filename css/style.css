@@ -243,6 +243,51 @@ span.nought {
 	margin-left: 5px;
 }
 
+#overlay {
+	width: 960px;
+	height: 700px;
+	background: #fff;
+	position: absolute;
+	top: 0px;
+}
+
+#nickname {
+	width: 300px;
+	margin: 0 auto;
+	margin-top: 130px;
+}
+
+#nickname-err {
+	display: none;
+}
+
+#connecting {
+	display: none;
+	width: 300px;
+	margin: 0 auto;
+	margin-top: 130px;
+}
+
+#messages {
+	height: 100px;
+	overflow: auto;
+}
+
+#messages ul {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+#messages ul b {
+	font-weight: bold;
+}
+
+#messages ul em {
+	font-style: italic;
+	color: #666;
+}
+
 /**
  * Non-semantic helper classes: please define your styles before this section.
  */

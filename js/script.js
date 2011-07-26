@@ -51,17 +51,13 @@ var view = new GameView({
 var socket = new io.connect(null, {port: 8080});
 
 socket.on('connect', function() {
-	$('#announcements').text('Connected!');
-});
 
-socket.on('message', function(data) {
-	console.log(data);
 });
 
 // annoncements
 socket.on('announcement', function(msg) {
 	console.log(msg);
-	$('#announcements').text(msg);
+	$('#chat #messages ul').append('<li><em>'+msg+'</em></li>');
 });
 
 socket.on('users', function(users) {
@@ -70,6 +66,17 @@ socket.on('users', function(users) {
 		$('#user_list').append($('<li>').text(users[i]));
 	}
 });
+
+socket.on('message', message);
+
+function clear() {
+	$('#message').val('').focus();
+};
+
+function message(from, msg) {
+	console.log(from+' '+msg);
+	$('#chat #messages ul').append('<li><b>'+from+'</b> '+msg+'</li>');
+}
 
 $(document).ready(function(){
    
@@ -88,14 +95,25 @@ $(document).ready(function(){
 	});
 
 	$('#set-nickname').submit(function() {
+		$('#nickname').hide();
+		$('#connecting').show();
 		socket.emit('user', $('#name_input').val(), function(set) {
 			if(!set) {
 				console.log('Nickname set');
-				$('#nickname').hide();
+				$('#overlay').fadeOut(700);
 			} else {
 				console.log('Nickname not set');
+				$('#nickname').show();
 			}
 		});
+		return false;
+	});
+
+	// TODO:  add send verification
+	$('#send-message').submit(function() {
+		message('me', $('#message').val());
+		socket.emit('message', $('#message').val());
+		clear();
 		return false;
 	});
 })

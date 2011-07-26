@@ -79,11 +79,12 @@
 		<div class="clear"></div>
 		
 		<div id="announcements"></div>
-		<div id="chat">
+		<div id="overlay">
 			<div id="nickname">
 				<form class="wrap" id="set-nickname">
-					<p>Please type in your nickname and press enter</p>
+					<p>Please type in your nickname</p>
 					<input type="text" id="name_input"/>
+					<input type="submit" />
 					<p id="nickname-err">Nickname already in use</p>
 				</form>
 			</div>
@@ -92,9 +93,10 @@
 					Connecting to socket.io server
 				</div>
 			</div>
+		</div>
+		<div id="chat">
 			<div id="messages">
-				<div id="nicknames"></div>
-				<div id="lines"></div>
+				<ul></ul>
 			</div>
 			<form id="send-message">
 				<input type="text" id="message"/>
