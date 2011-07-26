@@ -25,6 +25,27 @@ var Noughts = Backbone.Collection.extend({
 var crosses = new Crosses;
 var noughts = new Noughts;
 
+var BoardView = Backbone.View.extend({
+	initialize: function() {
+		console.log('Board view initialized');
+		crosses.bind("add", this.addCross);
+		noughts.bind("add", function(nought) {
+			alert(nought.get('owner'));
+		});
+	},
+	render: function() {
+		console.log(this.model.toJSON());
+	},
+	addCross: function(cross) {
+		$('#'+cross.get('element')).html('<span class="cross">X</span>').removeClass('active');
+		socket.emit('addcross', cross);
+	}
+});
+
+var viewCrosses = new BoardView({
+	model: crosses
+});
+
 /*
 var GameView = Backbone.View.extend({
 	tagName : 'div',
@@ -56,11 +77,12 @@ socket.on('connect', function() {
 
 // annoncements
 socket.on('announcement', function(msg) {
-	console.log(msg);
 	$('#chat #messages ul').append('<li><em>'+msg+'</em></li>');
+	$('#messages').get(0).scrollTop = 10000000;
 });
 
 socket.on('users', function(users) {
+	console.log(users);
 	$('#user_list').empty();
 	for (var i in users) {
 		$('#user_list').append($('<li>').text(users[i]));
@@ -69,6 +91,15 @@ socket.on('users', function(users) {
 
 socket.on('message', message);
 
+socket.on('addcross', function(data) {
+	console.log(data);
+	crosses.add(data);
+});
+
+socket.on('buffer', function(data) {
+	console.log(data);
+});
+
 function clear() {
 	$('#message').val('').focus();
 };
@@ -76,6 +107,7 @@ function clear() {
 function message(from, msg) {
 	console.log(from+' '+msg);
 	$('#chat #messages ul').append('<li><b>'+from+'</b> '+msg+'</li>');
+	$('#messages').get(0).scrollTop = 10000000;
 }
 
 $(document).ready(function(){
@@ -83,13 +115,12 @@ $(document).ready(function(){
    // Add jquery 
 
 	$('.square').click(function() {
-		$(this).html('<span class="cross">X</span>').removeClass('active');
 		var position = $(this).attr('id').split('_');
 		position = position[1].split('x');
-		new Cross({
+		crosses.add({
 			x: parseInt(position[0]),
 			y: parseInt(position[1]),
-			owner: 'jk'
+			element: $(this).attr('id')
 		});
 		return false;
 	});

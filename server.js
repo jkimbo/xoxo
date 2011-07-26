@@ -15,7 +15,7 @@ var io = io.listen(server),
  
 io.sockets.on('connection', function(socket) {
 	
-	socket.emit('users', users);	
+	socket.emit('buffer', buffer);	
 
 	socket.on('user', function(user, fn) {
 		if(users[user]) { // if user already in users
@@ -23,6 +23,15 @@ io.sockets.on('connection', function(socket) {
 		} else {
 			fn(false);
 			users[user] = socket.user = user; // add user to buffer
+			console.log(users.length);
+			if(users.length == 0) {
+				// assign the user as cross
+				console.log('cross');
+				users['player'] = cross;
+			} else if(users.lenght == 1) {
+				// assign the users as nought
+				users['player'] = nought;
+			}
 			socket.broadcast.emit('announcement', user + ' connected');
 			io.sockets.emit('users', users);
 		}
@@ -30,6 +39,12 @@ io.sockets.on('connection', function(socket) {
 
 	socket.on('message', function (msg) {
 		socket.broadcast.emit('message', socket.user, msg);
+	});
+
+	socket.on('addcross', function(data) {
+		data.user = socket.user;
+		buffer = data;
+		socket.broadcast.emit('addcross', data);
 	});
 
 	socket.on('disconnect', function () {
