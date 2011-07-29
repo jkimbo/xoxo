@@ -38,7 +38,6 @@ var BoardView = Backbone.View.extend({
 	},
 	addCross: function(cross) {
 		$('#'+cross.get('element')).html('<span class="cross">X</span>').removeClass('active');
-		socket.emit('addcross', cross);
 	}
 });
 
@@ -46,27 +45,33 @@ var viewCrosses = new BoardView({
 	model: crosses
 });
 
-/*
-var GameView = Backbone.View.extend({
-	tagName : 'div',
-	el : '.cont',
-	className : 'game',
+var User = Backbone.Model.extend({
+	initialize: function(spec){
+		
+		}	
+});
+
+var Users = Backbone.Collection.extend({
+	model: User
+});
+
+var UserView = Backbone.View.extend({
 	initialize: function() {
-		console.log('View initialized');
-		_.bindAll(this, "render");
+		users.bind("add", this.userAdd);
 	},
-	render : function() {
-		// Code for rendering the HTML for the view
-		console.log('Render');
-		console.log(this.model.toJSON());
-		$(this.el).html(this.model.get('name'));
+	render: function() {
+
+	},
+	userAdd: function(user) {
+		console.log(user.get('player'));
 	}
 });
 
-var view = new GameView({
-	model: portal
+var users = new Users;
+
+var userView = new UserView({
+	model: users
 });
-*/
 
 // socket.io specific code
 var socket = new io.connect(null, {port: 8080});
@@ -81,11 +86,12 @@ socket.on('announcement', function(msg) {
 	$('#messages').get(0).scrollTop = 10000000;
 });
 
-socket.on('users', function(users) {
-	console.log(users);
+socket.on('users', function(user_list) {
+	console.log(user_list);
 	$('#user_list').empty();
-	for (var i in users) {
-		$('#user_list').append($('<li>').text(users[i]));
+	for (var i in user_list) {
+		$('#user_list').append($('<li>').text(user_list[i].user));
+		users.add(user_list[i]);
 	}
 });
 
@@ -114,14 +120,17 @@ $(document).ready(function(){
    
    // Add jquery 
 
+
 	$('.square').click(function() {
 		var position = $(this).attr('id').split('_');
 		position = position[1].split('x');
-		crosses.add({
+		var cross = {
 			x: parseInt(position[0]),
 			y: parseInt(position[1]),
 			element: $(this).attr('id')
-		});
+		};
+		crosses.add(cross);
+		socket.emit('addcross', cross);
 		return false;
 	});
 
